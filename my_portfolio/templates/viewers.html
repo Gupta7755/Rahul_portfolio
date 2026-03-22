@@ -1708,34 +1708,26 @@
             <p>I'm constantly exploring new ideas and always open to discussing new projects, creative ideas or opportunities to be part of your visions.</p>
             
             <div class="social-grid">
-                <a href="mailto:{{ about.email }}" class="social-box">
-                    <i class="fa-solid fa-envelope"></i>
-                    <span>Email Me</span>
-                </a>
-                <div class="social-box">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <span>{{ about.location|default:"New Delhi, India" }}</span>
-                </div>
-                <a href="{{ about.github }}" target="_blank" class="social-box">
+                <a href="{{ profile.github }}" target="_blank" class="social-box">
                     <i class="fa-brands fa-github"></i>
                     <span>GitHub</span>
                 </a>
-                <a href="{{ about.linkedin }}" target="_blank" class="social-box">
+                <a href="{{ profile.linkedin }}" target="_blank" class="social-box">
                     <i class="fa-brands fa-linkedin"></i>
                     <span>LinkedIn</span>
                 </a>
-                <a href="{{ about.twitter }}" target="_blank" class="social-box">
-                    <i class="fa-brands fa-x-twitter"></i>
+                <a href="{{ profile.twitter }}" target="_blank" class="social-box">
+                    <i class="fa-brands fa-twitter"></i>
                     <span>Twitter</span>
                 </a>
                 <button onclick="openFeedbackModal()" class="social-box" style="width: 100%; border: none; font-family: inherit; cursor: pointer;">
                     <i class="fa-solid fa-star" style="color: #ff9f43;"></i>
-                    <span>Feedback</span>
+                    <span>Give Feedback</span>
                 </button>
             </div>
 
             <a href="{% url 'admins' %}" class="admin-btn">
-                <i class="fa-solid fa-user-shield"></i> Admin Settings
+                <i class="fa-solid fa-user-shield"></i> Admin Dashboard
             </a>
         </div>
     </div>
