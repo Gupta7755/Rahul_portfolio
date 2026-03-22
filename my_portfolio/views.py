@@ -89,12 +89,8 @@ def verify_contact(request):
     return JsonResponse({"success": False, "error": "Invalid request"})
 
 def viewers(request):
-    try:
-        profile = Profile.objects.first()
-        about = About.objects.first()
-    except Exception as e:
-        # Tables don't exist yet (migrations needed)
-        return render(request, 'viewers.html', {'error_msg': "Database tables not found. Please run migrations."})
+    profile = Profile.objects.first()
+    about = About.objects.first()
     
     if request.method == "POST":
         if "contact_submit" in request.POST:

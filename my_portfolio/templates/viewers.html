@@ -1173,13 +1173,6 @@
     </div>
     <!-- ===== END LAUNCH SPLASH ===== -->
 
-    {% if not profile and not about %}
-    <div class="no-data-msg">
-        <h2 style="color: var(--primary); margin-bottom: 15px;">🚀 Deployment Successful!</h2>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">Your new PostgreSQL database is ready. Since it's empty, please log in to the admin panel to add your profile information.</p>
-        <a href="{% url 'admin_login' %}" class="setup-link"><i class="fa-solid fa-lock"></i> Go to Admin Login</a>
-    </div>
-    {% endif %}
 
     <div class="header">
         <div class="logo">
