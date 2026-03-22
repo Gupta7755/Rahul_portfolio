@@ -5,3 +5,5 @@ tzdata==2025.1
 python-dotenv==1.0.1
 gunicorn
 whitenoise
+cloudinary
+django-cloudinary-storage
