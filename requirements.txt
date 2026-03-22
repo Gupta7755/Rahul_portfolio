@@ -3,3 +3,9 @@ Django==5.1.7
 sqlparse==0.5.3
 tzdata==2025.1
 python-dotenv==1.0.1
+# gunicorn
+# whitenoise
+# cloudinary
+# django-cloudinary-storage
+# dj-database-url
+# psycopg2-binary
