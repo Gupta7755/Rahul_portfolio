@@ -140,13 +140,13 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
 }
 
-# Django 4.2+ unified STORAGES dict (replaces deprecated DEFAULT_FILE_STORAGE)
+# Django 4.2+ unified STORAGES dict
 STORAGES = {
     'default': {
-        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+        'BACKEND': 'django.core.files.storage.FileSystemStorage', # Fallback to local
     },
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage', # Simple storage, no manifest required
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
     },
 }
 
