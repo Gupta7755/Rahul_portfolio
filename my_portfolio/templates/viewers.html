@@ -1287,17 +1287,17 @@
 
 
         <div class="social_icons">
-            <a href="{{ profile.github }}" target="_blank">
+            <a href="{{ profile.github|default:about.github }}" target="_blank">
                 <i class="fa-brands fa-github"></i>
             </a>
         
-            <a href="{{ profile.linkedin }}" target="_blank">
+            <a href="{{ profile.linkedin|default:about.linkedin }}" target="_blank">
                 <i class="fa-brands fa-linkedin"></i>
             </a>
             <a href="{{ profile.instagram }}" target="_blank">
                 <i class="fa-brands fa-instagram"></i>
             </a>
-            <a href="{{ profile.twitter }}" target="_blank">
+            <a href="{{ profile.twitter|default:about.twitter }}" target="_blank">
                 <i class="fa-brands fa-twitter"></i>
             </a>
         </div>
@@ -1311,7 +1311,13 @@
 
     <div class="hero_right">
         <div class="profile-img-wrapper">
+            {% if profile and profile.profile_image %}
             <img src="{{ profile.profile_image.url }}" alt="Rahul's Photo">
+            {% else %}
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05);">
+                <i class="fa-solid fa-user-astronaut" style="font-size: 80px; color: var(--glass-border);"></i>
+            </div>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -1865,15 +1871,15 @@
             <p>I'm constantly exploring new ideas and always open to discussing new projects, creative ideas or opportunities to be part of your visions.</p>
             
             <div class="social-grid">
-                <a href="{{ profile.github }}" target="_blank" class="social-box">
+                <a href="{{ profile.github|default:about.github }}" target="_blank" class="social-box">
                     <i class="fa-brands fa-github"></i>
                     <span>GitHub</span>
                 </a>
-                <a href="{{ profile.linkedin }}" target="_blank" class="social-box">
+                <a href="{{ profile.linkedin|default:about.linkedin }}" target="_blank" class="social-box">
                     <i class="fa-brands fa-linkedin"></i>
                     <span>LinkedIn</span>
                 </a>
-                <a href="{{ profile.twitter }}" target="_blank" class="social-box">
+                <a href="{{ profile.twitter|default:about.twitter }}" target="_blank" class="social-box">
                     <i class="fa-brands fa-twitter"></i>
                     <span>Twitter</span>
                 </a>
