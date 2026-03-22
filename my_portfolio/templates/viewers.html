@@ -7,9 +7,9 @@
     <title>{{ profile.name|default:"Portfolio" }} | {{ profile.role|default:"Home" }}</title>
     
     <!-- Open Graph SEO Tags -->
-    <meta property="og:title" content="{{ profile.name }} - {{ profile.role }}">
+    <meta property="og:title" content="{{ profile.name|default:'Portfolio' }} - {{ profile.role|default:'Work' }}">
     <meta property="og:description" content="Explore my portfolio, projects, and work experience.">
-    {% if profile.profile_image %}
+    {% if profile and profile.profile_image %}
     <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ profile.profile_image.url }}">
     {% endif %}
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
@@ -107,6 +107,10 @@
             text-shadow: 0 0 15px var(--secondary);
             transform: scale(1.05);
         }
+
+        .logo h1 {
+            cursor: pointer;
+        }
         
         .nav {
             display: flex;
@@ -155,6 +159,22 @@
 
         .nav a:hover::after{
             width: 100%;
+        }
+
+        .no-data-msg {
+            text-align: center;
+            padding: 40px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            margin: 40px auto;
+            max-width: 800px;
+        }
+
+        .setup-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
         }
 
         .hero{
@@ -1120,7 +1140,7 @@
             </div>
             <span class="splash-script-role">Engineer.</span>
 
-            <div class="splash-tagline">{{ profile.name }} &mdash; Building Intelligent Systems</div>
+            <div class="splash-tagline">{% if profile %}{{ profile.name }}{% else %}Portfolio{% endif %} &mdash; Building Intelligent Systems</div>
 
             <div class="splash-tech-pills">
                 <span class="pill-c">Python</span>
@@ -1142,10 +1162,24 @@
             <div class="splash-hud tl"></div>
             <div class="splash-hud br"></div>
 
+            {% if profile and profile.profile_image %}
             <img class="splash-profile-img" src="{{ profile.profile_image.url }}" alt="Rahul Kumar">
+            {% else %}
+            <div class="splash-profile-img" style="background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; border: 1px dashed var(--glass-border);">
+                <i class="fa-solid fa-user-astronaut" style="font-size: 80px; color: var(--glass-border);"></i>
+            </div>
+            {% endif %}
         </div>
     </div>
     <!-- ===== END LAUNCH SPLASH ===== -->
+
+    {% if not profile and not about %}
+    <div class="no-data-msg">
+        <h2 style="color: var(--primary); margin-bottom: 15px;">🚀 Deployment Successful!</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Your new PostgreSQL database is ready. Since it's empty, please log in to the admin panel to add your profile information.</p>
+        <a href="{% url 'admin_login' %}" class="setup-link"><i class="fa-solid fa-lock"></i> Go to Admin Login</a>
+    </div>
+    {% endif %}
 
     <div class="header">
         <div class="logo">
@@ -1170,8 +1204,8 @@
     <section class="hero">
 
     <div class="hero_left">
-        <p class="tag">{{ profile.role }}</p>
-        <h1>Hello, I'm<br><span>{{ profile.name }}</span></h1>
+        <p class="tag">{{ profile.role|default:"AI DEVELOPER" }}</p>
+        <h1>Hello, I'm<br><span>{{ profile.name|default:"RAHUL KUMAR" }}</span></h1>
 
         <p class="desc">
            <h3 style="font-size: 38px;">I <span id="typing"></span></h3>

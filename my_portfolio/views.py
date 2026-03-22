@@ -89,8 +89,12 @@ def verify_contact(request):
     return JsonResponse({"success": False, "error": "Invalid request"})
 
 def viewers(request):
-    profile = Profile.objects.first()
-    about = About.objects.first()
+    try:
+        profile = Profile.objects.first()
+        about = About.objects.first()
+    except Exception as e:
+        # Tables don't exist yet (migrations needed)
+        return render(request, 'viewers.html', {'error_msg': "Database tables not found. Please run migrations."})
     
     if request.method == "POST":
         if "contact_submit" in request.POST:
@@ -121,7 +125,6 @@ def viewers(request):
             Feedback.objects.create(name=f_name, rating=f_rating, comment=f_message)
             messages.success(request, "Thank you! Your feedback will help improve this portfolio.")
             return redirect('/#contact')
-
     if about:
         about.skills_list = [s.strip() for s in about.skills_tags.split(',')] if about.skills_tags else []
         about.focus_list = [f.strip() for f in about.focus_areas.split(',')] if about.focus_areas else []
