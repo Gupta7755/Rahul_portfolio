@@ -1,0 +1,597 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #080808;
+            --primary: #00ffff;
+            --secondary: #ff00ff;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --danger: #ff4757;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body{
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.05), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.05), transparent 30%);
+            background-attachment: fixed;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1400px;
+            margin: 30px auto 50px;
+            padding: 20px 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .logo h1 {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .btn-danger {
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.4);
+        }
+
+        .dashboard-container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto 100px;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .dashboard-header h2 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-header p {
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .admin-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        .admin-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 10px;
+            color: #fff;
+        }
+
+        .card-stat {
+            text-align: right;
+        }
+
+        .card-stat h3 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .card-stat span {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .card-btn {
+            padding: 12px;
+            text-align: center;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-add {
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .btn-add:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+        }
+
+        .btn-manage {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-manage:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            width: 90%;
+            height: 90%;
+            max-width: 1200px;
+            background: var(--bg-color);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.2);
+            position: relative;
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: 0.3s;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            color: #fff;
+            transform: rotate(90deg);
+        }
+
+        #admin-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95); /* Django admin is light mode */
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header" data-aos="fade-down">
+        <div class="logo">
+            <h1>Control Panel</h1>
+        </div>
+        <div class="header-actions">
+            <!-- Link back to viewers page -->
+            <a href="{% url 'viewers' %}" class="btn btn-outline" target="_blank">
+                <i class="fa-solid fa-eye"></i> View Live Site
+            </a>
+            <!-- Django admin logout uses /admin/logout/ normally, or we just link to Django admin root -->
+            <a href="/admin/" class="btn btn-outline">
+                <i class="fa-solid fa-database"></i> Advanced Admin
+            </a>
+            <a href="{% url 'admin_logout' %}" class="btn btn-danger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        
+        <div class="dashboard-header" data-aos="zoom-in">
+            <h2>Welcome back {% if profile %}, {{ profile.name }} {% endif %}!</h2>
+            <p>Manage all your portfolio content directly from this control center.</p>
+        </div>
+
+        <div class="grid">
+            
+            <!-- Profile Card -->
+            <div class="admin-card" data-aos="fade-up" data-aos-delay="0">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fa-solid fa-user"></i></div>
+                    <div class="card-stat">
+                        <h3>1</h3>
+                        <span>Profile Active</span>
+                    </div>
+                </div>
+                <div class="card-title">Main Profile</div>
+                <p style="color:var(--text-muted); font-size: 14px; margin-top:5px;">Your core details, name, and social links.</p>
+                
+                <div class="card-actions">
+                    <a href="/admin/my_portfolio/profile/add/" class="card-btn btn-add"><i class="fa-solid fa-plus"></i> Add Profile</a>
+                    <a href="/admin/my_portfolio/profile/" class="card-btn btn-manage"><i class="fa-solid fa-pen"></i> Manage</a>
+                </div>
+            </div>
+
+            <!-- About Card -->
+            <div class="admin-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #ff9f43; background: rgba(255, 159, 67, 0.1);"><i class="fa-solid fa-address-card"></i></div>
+                    <div class="card-stat">
+                        <h3>{% if has_about %}1{% else %}0{% endif %}</h3>
+                        <span>About Sec</span>
+                    </div>
+                </div>
+                <div class="card-title">About Section</div>
+                <p style="color:var(--text-muted); font-size: 14px; margin-top:5px;">Your long bio, location, and secondary image.</p>
+                
+                <div class="card-actions">
+                    <a href="/admin/my_portfolio/about/add/" class="card-btn btn-add"><i class="fa-solid fa-plus"></i> Add</a>
+                    <a href="/admin/my_portfolio/about/" class="card-btn btn-manage"><i class="fa-solid fa-pen"></i> Manage</a>
+                </div>
+            </div>
+
+            <!-- Projects Card -->
+            <div class="admin-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #ff00ff; background: rgba(255, 0, 255, 0.1);"><i class="fa-solid fa-code"></i></div>
+                    <div class="card-stat">
+                        <h3>{{ projects_count }}</h3>
+                        <span>Projects</span>
+                    </div>
+                </div>
+                <div class="card-title">Portfolio Projects</div>
+                <p style="color:var(--text-muted); font-size: 14px; margin-top:5px;">Manage the web apps and code you showcase.</p>
+                
+                <div class="card-actions">
+                    <a href="/admin/my_portfolio/project/add/" class="card-btn btn-add"><i class="fa-solid fa-plus"></i> Add New</a>
+                    <a href="/admin/my_portfolio/project/" class="card-btn btn-manage"><i class="fa-solid fa-list"></i> View All</a>
+                </div>
+            </div>
+
+            <!-- Skills Card -->
+            <div class="admin-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #ff5252; background: rgba(255, 82, 82, 0.1);"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="card-stat">
+                        <h3>{{ skills_count }}</h3>
+                        <span>Skills</span>
+                    </div>
+                </div>
+                <div class="card-title">Technical Skills</div>
+                <p style="color:var(--text-muted); font-size: 14px; margin-top:5px;">Programming languages and tools you know.</p>
+                
+                <div class="card-actions">
+                    <a href="/admin/my_portfolio/skill/add/" class="card-btn btn-add"><i class="fa-solid fa-plus"></i> Add Skill</a>
+                    <a href="/admin/my_portfolio/skill/" class="card-btn btn-manage"><i class="fa-solid fa-list"></i> View All</a>
+                </div>
+            </div>
+
+            <!-- Experience Card -->
+            <div class="admin-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #1dd1a1; background: rgba(29, 209, 161, 0.1);"><i class="fa-solid fa-briefcase"></i></div>
+                    <div class="card-stat">
+                        <h3>{{ experiences_count }}</h3>
+                        <span>Roles</span>
+                    </div>
+                </div>
+                <div class="card-title">Work Experience</div>
+                <p style="color:var(--text-muted); font-size: 14px; margin-top:5px;">Your professional history and job roles.</p>
+                
+                <div class="card-actions">
+                    <a href="/admin/my_portfolio/experience/add/" class="card-btn btn-add"><i class="fa-solid fa-plus"></i> Add Role</a>
+                    <a href="/admin/my_portfolio/experience/" class="card-btn btn-manage"><i class="fa-solid fa-list"></i> View All</a>
+                </div>
+            </div>
+
+             <!-- Education Card -->
+             <div class="admin-card" data-aos="fade-up" data-aos-delay="500">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #feca57; background: rgba(254, 202, 87, 0.1);"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <div class="card-stat">
+                        <h3>{{ educations_count }}</h3>
+                        <span>Degrees</span>
+                    </div>
+                </div>
+                <div class="card-title">Education</div>
+                <p style="color:var(--text-muted); font-size: 14px; margin-top:5px;">Universities, degrees, and academic stats.</p>
+                
+                <div class="card-actions">
+                    <a href="/admin/my_portfolio/education/add/" class="card-btn btn-add"><i class="fa-solid fa-plus"></i> Add Edu</a>
+                    <a href="/admin/my_portfolio/education/" class="card-btn btn-manage"><i class="fa-solid fa-list"></i> View All</a>
+                </div>
+            </div>
+
+            <!-- Certificates Card -->
+            <div class="admin-card" data-aos="fade-up" data-aos-delay="600">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #54a0ff; background: rgba(84, 160, 255, 0.1);"><i class="fa-solid fa-certificate"></i></div>
+                    <div class="card-stat">
+                        <h3>{{ certificates_count }}</h3>
+                        <span>Certs</span>
+                    </div>
+                </div>
+                <div class="card-title">Certifications</div>
+                <p style="color:var(--text-muted); font-size: 14px; margin-top:5px;">Courses and professional certifications earned.</p>
+                
+                <div class="card-actions">
+                    <a href="/admin/my_portfolio/certificate/add/" class="card-btn btn-add"><i class="fa-solid fa-plus"></i> Add Cert</a>
+                    <a href="/admin/my_portfolio/certificate/" class="card-btn btn-manage"><i class="fa-solid fa-list"></i> View All</a>
+                </div>
+            </div>
+
+            <!-- Resume Card -->
+            <div class="admin-card" data-aos="fade-up" data-aos-delay="700">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #c8d6e5; background: rgba(200, 214, 229, 0.1);"><i class="fa-solid fa-file-pdf"></i></div>
+                    <div class="card-stat">
+                        <h3>{% if has_resume %}1{% else %}0{% endif %}</h3>
+                        <span>Files</span>
+                    </div>
+                </div>
+                <div class="card-title">Resume / CV</div>
+                <p style="color:var(--text-muted); font-size: 14px; margin-top:5px;">Total Downloads: <strong style="color:var(--primary);">{{ resume.downloads|default:"0" }}</strong></p>
+                
+                <div class="card-actions">
+                    <a href="/admin/my_portfolio/resume/add/" class="card-btn btn-add"><i class="fa-solid fa-upload"></i> Upload CV</a>
+                    <a href="/admin/my_portfolio/resume/" class="card-btn btn-manage"><i class="fa-solid fa-pen"></i> Manage</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Feedback Collection UI -->
+        <div class="feedback-section" data-aos="fade-up" style="margin-top: 50px;">
+            <div class="dashboard-header" style="margin-bottom: 30px; text-align: left; display: flex; align-items: center; gap: 15px;">
+                <div class="card-icon" style="color: #ff9f43; background: rgba(255,159,67,0.1); width: 50px; height: 50px; font-size: 22px; border-radius: 12px; display: flex; justify-content: center; align-items: center;"><i class="fa-solid fa-comments"></i></div>
+                <div>
+                    <h2 style="font-size: 28px; font-weight: 700; margin: 0;">Visitor Feedback</h2>
+                    <p style="font-size: 14px; margin-top: 5px; color: var(--text-muted);">See suggestions and ratings from your site visitors.</p>
+                </div>
+            </div>
+
+            <div class="feedback-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;">
+                {% for feedback in feedbacks %}
+                <div class="admin-card" style="padding: 25px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                        <div>
+                            <h4 style="font-size: 18px; color: #fff; margin-bottom: 5px;">{{ feedback.name }}</h4>
+                            <span style="font-size: 12px; color: var(--text-muted);">{{ feedback.created_at|date:"M d, Y h:i A" }}</span>
+                        </div>
+                        <div style="color: #ff9f43; font-size: 13px;">
+                            {% for _ in feedback.stars_range %}
+                                <i class="fa-solid fa-star"></i>
+                            {% endfor %}
+                            {% for _ in feedback.empty_stars_range %}
+                                <i class="fa-regular fa-star" style="color: rgba(255,255,255,0.1);"></i>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <p style="color: #ccc; font-size: 15px; line-height: 1.6;">"{{ feedback.comment }}"</p>
+                </div>
+                {% empty %}
+                <div style="grid-column: 1 / -1; text-align: center; padding: 50px; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px dashed rgba(255,255,255,0.1);">
+                    <i class="fa-solid fa-inbox" style="font-size: 40px; color: var(--text-muted); margin-bottom: 15px;"></i>
+                    <p style="color: var(--text-muted); font-size: 16px;">No feedback received yet. Your audience opinions will appear here!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Admin Modal Overlay -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <iframe id="admin-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 50
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('admin-modal');
+        const iframe = document.getElementById('admin-iframe');
+
+        function openModal(url) {
+            iframe.src = url;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // prevent background scroll
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            iframe.src = '';
+            document.body.style.overflow = 'auto'; // restore scroll
+            // Reload page to dynamically show new/updated counts
+            setTimeout(() => {
+                window.location.reload(); 
+            }, 400); 
+        }
+
+        // Intercept clicks on custom card buttons to load in modal instead of redirect
+        document.querySelectorAll('.card-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                const url = this.getAttribute('href');
+                openModal(url);
+            });
+        });
+    </script>
+</body>
+</html>
