@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-default-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # ALLOWED_HOSTS = [
 #     '127.0.0.1',
@@ -143,10 +143,10 @@ CLOUDINARY_STORAGE = {
 # Django 4.2+ unified STORAGES dict
 STORAGES = {
     'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
     },
     'staticfiles': {
-        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage', # Simplest static storage
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage', # Use non-manifest storage to avoid crashes
     },
 }
 
